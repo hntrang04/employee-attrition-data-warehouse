@@ -1,0 +1,89 @@
+﻿<DeploymentSnapshot xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:ddl300="http://schemas.microsoft.com/analysisservices/2011/engine/300" xmlns:ddl300_300="http://schemas.microsoft.com/analysisservices/2011/engine/300/300" xmlns:ddl400="http://schemas.microsoft.com/analysisservices/2012/engine/400" xmlns:ddl400_400="http://schemas.microsoft.com/analysisservices/2012/engine/400/400" xmlns:ddl500="http://schemas.microsoft.com/analysisservices/2013/engine/500" xmlns:ddl500_500="http://schemas.microsoft.com/analysisservices/2013/engine/500/500" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0">
+  <Target>
+    <Database>employee_attrition_ssas</Database>
+    <Server>SUPER-TUNA04</Server>
+    <ConnectionString>Data Source=SUPER-TUNA04;Timeout=0</ConnectionString>
+  </Target>
+  <Options>
+    <TransactionalDeployment>false</TransactionalDeployment>
+    <PartitionDeployment>DeployPartitions</PartitionDeployment>
+    <RoleDeployment>DeployRolesRetainMembers</RoleDeployment>
+    <ProcessingOption>Default</ProcessingOption>
+    <OutputScript></OutputScript>
+    <ImpactAnalysisFile></ImpactAnalysisFile>
+    <ConfigurationSettingsDeployment>Deploy</ConfigurationSettingsDeployment>
+    <OptimizationSettingsDeployment>Deploy</OptimizationSettingsDeployment>
+    <WriteBackTableCreation>UseExisting</WriteBackTableCreation>
+  </Options>
+  <Snapshot>
+    <ObjectSnapshots>
+      <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.RelationalDataSource</Type>
+        <TimeStamp>pWzMHWqlb1GOEQsrbDGqbz+86ZI=11-Dec-24 1:40:39 AM07-Dec-24 7:57:17 PM</TimeStamp>
+        <ID>
+          <String>Employee Attrition Wh</String>
+        </ID>
+      </ObjectSnapshot>
+      <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.DataSourceView</Type>
+        <TimeStamp>kR0gWg8/KHdcP8+pxnzlRODhScU=07-Dec-24 8:14:57 PM07-Dec-24 8:11:49 PM</TimeStamp>
+        <ID>
+          <String>Employee Attrition Wh</String>
+        </ID>
+      </ObjectSnapshot>
+      <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.Dimension</Type>
+        <TimeStamp>vmgsIQzjfn5RTkqSP3vEa25rz1k=08-Dec-24 12:35:51 AM07-Dec-24 9:11:40 PM</TimeStamp>
+        <ID>
+          <String>Dim Salary</String>
+        </ID>
+      </ObjectSnapshot>
+      <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.Dimension</Type>
+        <TimeStamp>QA72jwb4vx46D8l3OXzsSbPjVHM=08-Dec-24 12:35:51 AM07-Dec-24 9:11:40 PM</TimeStamp>
+        <ID>
+          <String>Dim Years</String>
+        </ID>
+      </ObjectSnapshot>
+      <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.Dimension</Type>
+        <TimeStamp>bbbCVmod74t5yypVRrjz7S4E96c=11-Dec-24 1:48:21 AM07-Dec-24 9:11:40 PM</TimeStamp>
+        <ID>
+          <String>Dim Role</String>
+        </ID>
+      </ObjectSnapshot>
+      <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.Dimension</Type>
+        <TimeStamp>2YPHSYh5BnWce8o/rWKRtGMNJbs=08-Dec-24 12:35:51 AM07-Dec-24 9:11:40 PM</TimeStamp>
+        <ID>
+          <String>Dim Employee</String>
+        </ID>
+      </ObjectSnapshot>
+      <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.Dimension</Type>
+        <TimeStamp>oSBlQirdQ1LeEmVw1Fu1b2No7bs=08-Dec-24 7:55:34 AM07-Dec-24 9:11:40 PM</TimeStamp>
+        <ID>
+          <String>Dim Monthly Hours</String>
+        </ID>
+      </ObjectSnapshot>
+      <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.Cube</Type>
+        <TimeStamp>z+SqqKS7kwEQsMoHXfTisW1wPwY=10-Dec-24 8:15:15 PM07-Dec-24 9:11:40 PMWcZBBH6LsRZ7gwXYQBFXBfBPpRs=08-Dec-24 2:48:43 PM07-Dec-24 9:11:40 PM</TimeStamp>
+        <ID>
+          <String>Employee Attrition Wh</String>
+        </ID>
+      </ObjectSnapshot>
+    </ObjectSnapshots>
+    <DatabaseSnapshot>
+      <Type>Microsoft.AnalysisServices.Database</Type>
+      <TimeStamp>6qu7JwcuxVmiW0azibzO8v5GVPY=07-Dec-24 7:19:32 PM07-Dec-24 7:19:30 PM</TimeStamp>
+      <ID>
+        <String>employee_attrition_ssas</String>
+      </ID>
+    </DatabaseSnapshot>
+    <Granularity>Coarse</Granularity>
+  </Snapshot>
+  <AssemblyLocations />
+  <ProcessingComplete>true</ProcessingComplete>
+  <LastDeployed>2024-12-10T18:48:27.64Z</LastDeployed>
+</DeploymentSnapshot>

@@ -1,0 +1,331 @@
+﻿
+---------+++++++++++++ DEMO_SSAS_TRUY VẤN MDX ++++++++++-------------
+
+-- Truy vấn 1: Trung bình số giờ làm việc hàng tháng theo phòng ban
+SELECT 
+	NON EMPTY 
+	{ [Measures].[Average Monthly Hours] } ON COLUMNS, 
+	NON EMPTY 
+	{ ([Dim Role].[Department].[Department].ALLMEMBERS ) } ON ROWS 
+FROM [Employee Attrition Wh];
+
+
+-- Truy vấn 2: Thống kê lương trung bình theo phòng ban
+SELECT 
+	NON EMPTY 
+	{ [Measures].[Average Salary] } ON COLUMNS, 
+	NON EMPTY 
+	{ ([Dim Role].[Department].[Department].ALLMEMBERS ) } ON ROWS 
+FROM [Employee Attrition Wh];
+
+
+-- Truy vấn 3: Thống kê số nhân viên nghỉ việc theo phòng ban
+SELECT 
+	NON EMPTY 
+	{ [Measures].[Count Attrition] } ON COLUMNS, 
+	NON EMPTY 
+	{ ([Dim Role].[Department].[Department].ALLMEMBERS ) } ON ROWS 
+FROM [Employee Attrition Wh];
+
+
+-- Truy vấn 4: Thống kê trung bình số giờ làm việc theo phòng ban và chức danh
+SELECT 
+	NON EMPTY 
+	[Measures].[Average Monthly Hours] ON COLUMNS, 
+	NON EMPTY { 
+		DrillDownLevel(
+			DrillDownLevel([Dim Role].[PhanCap_Role])
+		)
+	} ON ROWS 
+FROM [Employee Attrition Wh];
+
+
+-- Truy vấn 5: Thống kê mức độ hài lòng trung bình theo phòng ban và chức danh
+SELECT 
+	NON EMPTY 
+	[Measures].[Average Satisfaction Level] ON COLUMNS, 
+	NON EMPTY { 
+		DrillDownLevel(
+			DrillDownLevel([Dim Role].[PhanCap_Role])
+		)
+	} ON ROWS 
+FROM [Employee Attrition Wh];
+
+
+-- Truy vấn 6: Thống kê số giờ làm việc trung bình của nhân viên theo giới tính
+SELECT 
+	NON EMPTY 
+	{ [Measures].[Average Monthly Hours] } ON COLUMNS, 
+	NON EMPTY 
+	{ ([Dim Employee].[Gender].[Gender].ALLMEMBERS ) } ON ROWS 
+FROM [Employee Attrition Wh];
+
+
+-- Truy vấn 7: Thống kê số năm làm việc trung bình tại công ty theo từng nhóm lương
+SELECT 
+	NON EMPTY 
+	{ [Measures].[Average Years At Company] } ON COLUMNS, 
+	NON EMPTY 
+	{([Dim Salary].[Salary Bracket].[Salary Bracket].ALLMEMBERS ) } ON ROWS 
+FROM [Employee Attrition Wh];
+
+
+-- Truy vấn 8: Thống kê số nhân viên trên 30 tuổi nghỉ việc
+-- cách 1
+SELECT 
+	NON EMPTY 
+	{ [Measures].[Count Attrition] } ON COLUMNS, 
+	NON EMPTY { ([Dim Employee].[Age].[Age].ALLMEMBERS ) } ON ROWS 
+FROM ( 
+	SELECT ( 
+		[Dim Employee].[Age].&[31] : [Dim Employee].[Age].&[59] ) ON COLUMNS 
+	FROM [Employee Attrition Wh]);
+
+-- cách 2 
+SELECT 
+    {[Measures].[Count Attrition]} ON COLUMNS, 
+    NON EMPTY 
+    FILTER(
+        [Dim Employee].[Age].[Age].MEMBERS, 
+        [Dim Employee].[Age].CURRENTMEMBER.MEMBER_VALUE > 30
+    ) ON ROWS 
+FROM [Employee Attrition Wh];
+
+
+-- Truy vấn 9: Thống kê số nhân viên có mức độ hài lòng dưới 0.5 nghỉ việc theo phòng ban
+SELECT 
+    NON EMPTY 
+    { [Measures].[Count Attrition] } ON COLUMNS, 
+    NON EMPTY 
+    { ([Dim Role].[Department].[Department].ALLMEMBERS) } ON ROWS 
+
+FROM ( 
+    SELECT 
+        FILTER(
+            [Dim Employee].[Employee ID].MEMBERS,
+            [Measures].[Average Satisfaction Level] < 0.5
+        ) ON ROWS, 
+        [Dim Role].[Department] ON COLUMNS
+    FROM [Employee Attrition Wh]
+);
+
+
+-- Truy vấn 10: Thống kê số nhân viên làm việc hơn 200 giờ và có mức lương trên 50,000 nghỉ việc theo phòng ban
+-- cách 1
+SELECT 
+	NON EMPTY 
+	{ [Measures].[Count Attrition] } ON COLUMNS, 
+	NON EMPTY 
+	{ ([Dim Role].[Department].[Department].ALLMEMBERS ) } ON ROWS 
+FROM ( 
+	SELECT ( [Dim Salary].[Salary].&[50064] : [Dim Salary].[Salary].&[99991] ) ON COLUMNS 
+	FROM ( 
+		SELECT ( [Dim Monthly Hours].[Average Monthly Hours].&[201] : 
+			[Dim Monthly Hours].[Average Monthly Hours].&[249] ) ON COLUMNS 
+		FROM [Employee Attrition Wh])
+	);
+
+-- cách 2
+SELECT 
+    NON EMPTY { [Measures].[Count Attrition] } ON COLUMNS,
+    NON EMPTY { [Dim Role].[Department].[Department].ALLMEMBERS } ON ROWS
+FROM 
+    [Employee Attrition Wh]
+WHERE 
+    ([Dim Monthly Hours].[Average Monthly Hours].&[201] : 
+		[Dim Monthly Hours].[Average Monthly Hours].&[249], 
+     [Dim Salary].[Salary].&[50000] : [Dim Salary].[Salary].&[99999]);
+
+
+-- Truy vấn 11: Thống kê số nhân viên đã làm từ 7 năm trở lên, được thăng chức trong 5 năm qua theo phòng ban.
+-- cách 1
+SELECT 
+	NON EMPTY 
+	{ [Measures].[Count Promotion 1] } ON COLUMNS, 
+	NON EMPTY 
+	{ ([Dim Role].[Department].[Department].ALLMEMBERS ) } ON ROWS 
+FROM ( 
+	SELECT ( [Dim Years].[Years At Company].&[7] : [Dim Years].[Years At Company].&[10] ) ON COLUMNS 
+	FROM [Employee Attrition Wh]) ;
+
+-- cách 2
+SELECT 
+    NON EMPTY 
+	{ [Measures].[Count Promotion 1] } ON COLUMNS, 
+    NON EMPTY 
+	{ [Dim Role].[Department].[Department].MEMBERS } ON ROWS
+FROM [Employee Attrition Wh]
+WHERE ([Dim Years].[Years At Company].&[7]:[Dim Years].[Years At Company].&[10]);
+
+
+-- Truy vấn 12: Thống kê số nhân viên nghỉ việc thuộc nhóm lương ‘Low’, 'Very High'
+-- cách 1
+SELECT 
+	NON EMPTY 
+	{ [Measures].[Count Attrition] } ON COLUMNS, 
+	NON EMPTY { ([Dim Salary].[Salary Bracket].[Salary Bracket].ALLMEMBERS ) } ON ROWS 
+FROM ( 
+	SELECT ( { [Dim Salary].[Salary Bracket].&[Low] } ) ON COLUMNS 
+	FROM [Employee Attrition Wh]);
+
+-- cách 2
+SELECT 
+    NON EMPTY { [Measures].[Count Attrition] } ON COLUMNS, 
+    NON EMPTY 
+    { 
+        FILTER(
+            [Dim Salary].[Salary Bracket].[Salary Bracket].MEMBERS,
+            ([Dim Salary].[Salary Bracket].CURRENTMEMBER IS [Dim Salary].[Salary Bracket].&[Low] OR
+			[Dim Salary].[Salary Bracket].CURRENTMEMBER IS [Dim Salary].[Salary Bracket].&[Very High])
+        )
+    } ON ROWS
+FROM [Employee Attrition Wh];
+
+
+-- Truy vấn 13: Thống kê số nhân viên nghỉ việc thuộc nhóm ‘Overworked’ theo từng mức lương
+SELECT 
+	NON EMPTY 
+	{ [Measures].[Count Attrition] } ON COLUMNS, 
+	NON EMPTY { ([Dim Salary].[Salary Bracket].[Salary Bracket].MEMBERS ) } ON ROWS 
+FROM [Employee Attrition Wh]
+WHERE ([Dim Monthly Hours].[Overworked].&[Yes]);
+
+
+-- Truy vấn 14: Danh sách 5 nhân viên có mức lương cao nhất
+SELECT 
+	NON EMPTY 
+	{ [Measures].[Average Salary] } ON COLUMNS, 
+	NON EMPTY 
+	TOPCOUNT (
+	  [Dim Employee].[Employee ID].CHILDREN 
+	* [Dim Employee].[Gender].CHILDREN 
+	* [Dim Employee].[Age].CHILDREN 
+	* [Dim Role].[Department].CHILDREN 
+	* [Dim Role].[Job Title].CHILDREN, 
+	5,
+	[Measures].[Average Salary] )ON ROWS 
+FROM [Employee Attrition Wh];
+
+
+-- Truy vấn 15: Danh sách 3 nhân viên thuộc phòng ban HR làm việc tại công ty lâu nhất
+-- cách 1
+SELECT 
+	NON EMPTY 
+	{ [Measures].[Average Years At Company] } ON COLUMNS, 
+	NON EMPTY 
+	TOPCOUNT(
+	{ ([Dim Employee].[Employee ID].[Employee ID].ALLMEMBERS 
+	* [Dim Employee].[Gender].[Gender].ALLMEMBERS 
+	* [Dim Employee].[Age].[Age].ALLMEMBERS 
+	* [Dim Role].[Department].[Department].ALLMEMBERS 
+	* [Dim Role].[Job Title].[Job Title].ALLMEMBERS ) }, 
+	3,
+	[Measures].[Average Years At Company])
+	ON ROWS 
+	FROM ( 
+		SELECT ( { [Dim Role].[Department].&[HR] } ) ON COLUMNS 
+		FROM [Employee Attrition Wh]) ;
+
+-- cách 2
+SELECT 
+    NON EMPTY 
+	{ [Measures].[Average Years At Company] } ON COLUMNS, 
+    
+    NON EMPTY 
+    TOPCOUNT(
+        Generate(
+            FILTER(
+                [Dim Employee].[Employee ID].[Employee ID].MEMBERS,
+                [Dim Role].[Department].CURRENTMEMBER = [Dim Role].[Department].&[HR]
+            ),
+            [Dim Employee].[Employee ID].CURRENTMEMBER *
+            [Dim Employee].[Gender].[Gender].MEMBERS *
+            [Dim Employee].[Age].[Age].MEMBERS *
+			[Dim Role].[Department].[Department].MEMBERS *
+            [Dim Role].[Job Title].[Job Title].MEMBERS
+        ), 
+        3,
+        [Measures].[Average Years At Company]
+    ) ON ROWS 
+
+FROM [Employee Attrition Wh];
+
+
+-- Truy vấn 16: Danh sách 10 nhân viên có mức độ hài lòng thấp nhất
+SELECT 
+    NON EMPTY 
+	{ [Measures].[Average Satisfaction Level] } ON COLUMNS, 
+    
+    NON EMPTY 
+    Generate(
+        BOTTOMCOUNT(
+            [Dim Employee].[Employee ID].[Employee ID].MEMBERS,
+            10,
+            [Measures].[Average Satisfaction Level]
+        ),
+        [Dim Role].[Department].[Department].MEMBERS *
+        [Dim Role].[Job Title].[Job Title].MEMBERS *
+        [Dim Employee].[Employee ID].CURRENTMEMBER *
+        [Dim Employee].[Gender].[Gender].MEMBERS *
+        [Dim Employee].[Age].[Age].MEMBERS 
+
+    ) ON ROWS 
+
+FROM [Employee Attrition Wh];
+
+
+
+-- Truy vấn 17: Thống kê trung bình lương theo phòng ban và chức danh
+SELECT 
+	NON EMPTY 
+	[Dim Role].[Department].CHILDREN *
+	{ [Measures].[Average Salary] } ON COLUMNS, 
+	NON EMPTY { 
+		DrillDownLevel(
+			DrillDownLevel([Dim Role].[PhanCap_Role].[Job Title])
+		)
+	} ON ROWS 
+FROM [Employee Attrition Wh];
+
+
+-- Truy vấn 18: Thống kê số nhân viên
+-- không được thăng chức trong 5 năm qua theo phòng ban và giới tính
+SELECT 
+	NON EMPTY 
+	{ [Measures].[Count Promotion 0] } *
+	[Dim Employee].[Gender].[Gender].ALLMEMBERS ON COLUMNS, 
+	NON EMPTY 
+	[Dim Role].[Department].[Department].ALLMEMBERS ON ROWS 
+FROM [Employee Attrition Wh];
+
+
+-- Truy vấn 19: Thống kê số nhân viên nghỉ việc thuộc nhóm ‘Overworked’ trong từng phòng ban và giới tính
+-- cách 1
+SELECT 
+	NON EMPTY 
+	{ [Measures].[Count Attrition] } *
+	[Dim Role].[Department].ALLMEMBERS ON COLUMNS, 
+	NON EMPTY 
+	[Dim Employee].[Gender].ALLMEMBERS ON ROWS 
+FROM [Employee Attrition Wh]
+WHERE ([Dim Monthly Hours].[Overworked].&[Yes]);
+
+-- cách 2 (power bi)
+SELECT 
+	NON EMPTY 
+	{ [Measures].[Count Attrition] } ON COLUMNS, 
+	NON EMPTY 
+	[Dim Employee].[Gender].CHILDREN *
+	[Dim Role].[Department].CHILDREN ON ROWS 
+FROM [Employee Attrition Wh]
+WHERE ([Dim Monthly Hours].[Overworked].&[Yes]);
+
+
+-- Truy vấn 20: Danh sách các phòng ban có số giờ làm việc trung bình hàng tháng trên 200 giờ
+SELECT 
+	NON EMPTY
+	[Measures].[Average Monthly Hours] ON COLUMNS,
+	NON EMPTY 
+	[Dim Role].[Department].[Department].MEMBERS 
+	HAVING [Measures].[Average Monthly Hours] > 200 ON ROWS
+FROM [Employee Attrition Wh];
