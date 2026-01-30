@@ -26,6 +26,7 @@ The solution covers the entire data lifecycle:
 4.  **Reporting:** Visualizing insights via **Power BI, Excel, and Google Data Studio**.
 5.  **Prediction:** Applying Machine Learning algorithms (**KNN, Random Forest, XGBoost**) to predict attrition risk.
 
+📺 **[Project Demo](https://youtube.com/playlist?list=PLcG6b3ts2Bi18nhDEc0gG04NELpq1_64r&si=SGu1avFn9b52zhxB)**
 
 ## 2. Project Objectives
 
