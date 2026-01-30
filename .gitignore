@@ -1,0 +1,77 @@
+########################################
+# OS / System files
+########################################
+.DS_Store
+Thumbs.db
+
+########################################
+# SSIS / Visual Studio
+########################################
+# Build artifacts
+bin/
+obj/
+
+# SSIS packages & deployment
+*.ispac
+
+# User-specific settings
+*.dtproj.user
+*.user
+
+# Logs
+*.log
+BuildLog.xml
+
+########################################
+# SQL Server
+########################################
+# Transaction log files
+*.ldf
+
+# Backup files
+*.bak
+
+########################################
+# Python (if used)
+########################################
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.venv/
+venv/
+
+########################################
+# Jupyter Notebook
+########################################
+.ipynb_checkpoints/
+
+########################################
+# Data analysis outputs
+########################################
+# Temporary / intermediate files
+*.tmp
+*.temp
+
+########################################
+# Excel temporary files
+########################################
+~$*.xlsx
+~$*.xls
+
+########################################
+# IDE / Editor
+########################################
+.vscode/
+.idea/
+
+########################################
+# Do NOT ignore (important project files)
+########################################
+!*.sql
+!*.dtsx
+!*.dtproj
+!*.sln
+!*.md
+!*.png
