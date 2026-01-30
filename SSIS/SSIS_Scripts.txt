@@ -1,0 +1,183 @@
+-- LOCATION PATH
+D:\HUYNH_NGOC_TRANG\UIT-YEAR3\HK5\OLAP\DOAN\SSIS
+
+-- CONNECTION MANAGER
+Server name: SUPER-TUNA04
+Authemtication: SQL Server Authemtication
+username: sa
+pass: 123456789
+
+-- DATA SOURCE DESIGNER
+Use the service account
+
+
+------------------------------------------------
+
+-- Tạo DB employee_attrition_wh
+CREATE DATABASE employee_attrition_wh;
+USE employee_attrition_wh;
+
+-- Xem các bảng
+SELECT * FROM Dim_Employee;
+SELECT * FROM Dim_Role;
+SELECT * FROM Dim_Years;
+SELECT * FROM Dim_Monthly_Hours;
+SELECT * FROM Fact;
+
+
+-- Tạo bảng
+CREATE TABLE [Dim_Employee] (
+    [Employee_ID] int primary key,
+    [Age] int,
+    [Gender] nvarchar(255)
+)
+
+CREATE TABLE [Dim_Role] (
+    [Role_ID] nvarchar(255) primary key,
+    [Department] nvarchar(255),
+    [Job_Title] nvarchar(255)
+)
+
+CREATE TABLE [Dim_Years] (
+    [Years_at_Company] int primary key
+)
+
+CREATE TABLE [Dim_Monthly_Hours] (
+    [Average_Monthly_Hours] int primary key,
+    [Overworked] nvarchar(255)
+)
+
+CREATE TABLE [Dim_Salary] (
+    [Salary] int primary key,
+    [Salary_Bracket] nvarchar(255)
+)
+
+CREATE TABLE [Fact] (
+    [Employee_ID] int primary key,
+    [Role_ID] nvarchar(255),
+    [Years_at_Company] int,
+    [Average_Monthly_Hours] int,
+    [Salary] int,
+    [Satisfaction_Level] float,
+    [Promotion_Last_5Years] bit,
+    [Attrition] bit
+)
+
+
+-- Xóa dữ liệu các bảng
+DELETE FROM Dim_Employee;
+DELETE FROM Dim_Role;
+DELETE FROM Dim_Years;
+DELETE FROM Dim_Monthly_Hours;
+DELETE FROM Dim_Salary;
+DELETE FROM Fact;
+
+-- Tạo khóa ngoại
+ALTER TABLE Fact
+ADD CONSTRAINT FK_Fact_Employee
+FOREIGN KEY (Employee_ID) REFERENCES Dim_Employee(Employee_ID);
+
+ALTER TABLE Fact
+ADD CONSTRAINT FK_Fact_Role
+FOREIGN KEY (Role_ID) REFERENCES Dim_Role(Role_ID);
+
+ALTER TABLE Fact
+ADD CONSTRAINT FK_Fact_Years
+FOREIGN KEY (Years_at_Company) REFERENCES Dim_Years(Years_at_Company);
+
+ALTER TABLE Fact
+ADD CONSTRAINT FK_Fact_Monthly_Hours
+FOREIGN KEY (Average_Monthly_Hours) REFERENCES Dim_Monthly_Hours(Average_Monthly_Hours);
+
+ALTER TABLE Fact
+ADD CONSTRAINT FK_Fact_Salary
+FOREIGN KEY (Salary) REFERENCES Dim_Salary(Salary);
+
+-- Xóa các khóa ngoại trước khi tạo lại
+ALTER TABLE Fact 
+DROP CONSTRAINT FK_Fact_Employee;
+
+ALTER TABLE Fact 
+DROP CONSTRAINT FK_Fact_Role;
+
+ALTER TABLE Fact 
+DROP CONSTRAINT FK_Fact_Years;
+
+ALTER TABLE Fact 
+DROP CONSTRAINT FK_Fact_Monthly_Hours;
+
+ALTER TABLE Fact 
+DROP CONSTRAINT FK_Fact_Salary;
+
+
+
+
+
+
+-- Xóa các bảng nếu đã tồn tại
+-- DROP DATABASE employee_attrition_wh;
+DROP TABLE IF EXISTS Dim_Employee;
+DROP TABLE IF EXISTS Dim_Role;
+DROP TABLE IF EXISTS Dim_Years;
+DROP TABLE IF EXISTS Dim_Monthly_Hours;
+DROP TABLE IF EXISTS Fact;
+
+
+-- Tạo bảng Dim_Employee
+CREATE TABLE Dim_Employee (
+    Employee_ID INT PRIMARY KEY,
+    Age INT NOT NULL,
+    Gender VARCHAR(10) NOT NULL
+);
+
+
+-- Tạo bảng Dim_Role
+CREATE TABLE Dim_Role (
+    Role_ID VARCHAR(50) PRIMARY KEY,
+    Department VARCHAR(50) NOT NULL,
+    Job_Title VARCHAR(50) NOT NULL
+);
+
+-- Tạo bảng Dim_Years
+CREATE TABLE Dim_Years (
+    Years_at_Company INT PRIMARY KEY
+);
+
+-- Tạo bảng Dim_Monthly_Hours
+CREATE TABLE Dim_Monthly_Hours (
+    Average_Monthly_Hours INT PRIMARY KEY
+);
+
+-- Tạo bảng Fact
+CREATE TABLE Fact (
+    Employee_ID INT NOT NULL PRIMARY KEY,
+    Role_ID VARCHAR(50) NOT NULL,
+    Years_at_Company INT NOT NULL,
+	Average_Monthly_Hours INT NOT NULL,
+	Satisfaction_Level FLOAT NOT NULL,
+	Promotion_Last_5Years BIT NOT NULL,
+    Salary INT NOT NULL,
+    Attrition BIT NOT NULL
+);
+
+GO
+
+-- Thêm khóa ngoại từ bảng Fact đến bảng Dim_Employee
+ALTER TABLE Fact
+ADD CONSTRAINT FK_Fact_Employee
+FOREIGN KEY (Employee_ID) REFERENCES Dim_Employee(Employee_ID);
+
+-- Thêm khóa ngoại từ bảng Fact đến bảng Dim_Role
+ALTER TABLE Fact
+ADD CONSTRAINT FK_Fact_Role
+FOREIGN KEY (Role_ID) REFERENCES Dim_Role(Role_ID);
+
+-- Thêm khóa ngoại từ bảng Fact đến bảng Dim_Years
+ALTER TABLE Fact
+ADD CONSTRAINT FK_Fact_Years
+FOREIGN KEY (Years_at_Company) REFERENCES Dim_Years(Years_at_Company);
+
+-- Thêm khóa ngoại từ bảng Fact đến bảng Dim_Monthly_Hours
+ALTER TABLE Fact
+ADD CONSTRAINT FK_Fact_Monthly_Hours
+FOREIGN KEY (Average_Monthly_Hours) REFERENCES Dim_Monthly_Hours(Average_Monthly_Hours);

@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35431.28
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{C9674DCB-5085-4A16-B785-4C70DD1589BD}") = "employee_attrition_ssis", "employee_attrition_ssis.dtproj", "{154DDCAC-D962-41E4-BC7C-2F3A455B5305}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Development|Default = Development|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{154DDCAC-D962-41E4-BC7C-2F3A455B5305}.Development|Default.ActiveCfg = Development
+		{154DDCAC-D962-41E4-BC7C-2F3A455B5305}.Development|Default.Build.0 = Development
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DD9882EB-8352-4DF8-8AC8-73DF09F383F5}
+	EndGlobalSection
+EndGlobal
