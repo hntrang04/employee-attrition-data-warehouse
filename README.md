@@ -1,4 +1,4 @@
-# ANALYZING EMPLOYEE TURNOVER AND PREDICTING ATTRITION
+# Employee Turnover Analysis and Attrition Prediction
 
 <!-- Core Technologies -->
 [![Visual Studio](https://img.shields.io/badge/Visual_Studio-IDE-5C2D91?logo=visualstudio&logoColor=white)](https://visualstudio.microsoft.com/)
